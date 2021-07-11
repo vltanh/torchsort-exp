@@ -1,13 +1,17 @@
-id: CrossEntropy
+id: SoftSort-KL
 pretrained: null
 seed: 3698
 model:
-    name: BaseClassifier
+    # name: BaseClassifier
+    # args:
+    #     extractor_cfg: 
+    #         name: ResNetExtractor
+    #         args:
+    #             version: resnet18
+    #     nclasses: 10
+    name: CNN
     args:
-        extractor_cfg: 
-            name: ResNetExtractor
-            args:
-                version: resnet18
+        hidden: 64
         nclasses: 10
 optimizer:
     name: Adam
@@ -17,7 +21,7 @@ loss:
     name: TopKClassificationLoss
     args:
         nclasses: 10
-        regularization: l2
+        regularization: kl
         regularization_strength: 1.0
 metric:
     - name: Accuracy
@@ -41,7 +45,7 @@ dataset:
         loader:
             name: DataLoader
             args:
-                batch_size: 64
+                batch_size: 1024
                 shuffle: True
                 pin_memory: True
     val:
@@ -51,7 +55,7 @@ dataset:
         loader:
             name: DataLoader
             args:
-                batch_size: 64
+                batch_size: 1024
                 shuffle: False
                 pin_memory: True
 trainer:

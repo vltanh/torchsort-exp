@@ -17,6 +17,8 @@ class CIFARDataset:
         self.data = CIFAR(version)(data_dir, train=is_train, download=True)
         if is_train:
             self.transform = tvtf.Compose([
+                tvtf.RandomCrop(32, padding=4, padding_mode="reflect"),
+                tvtf.RandomHorizontalFlip(),
                 tvtf.ToTensor(),
                 tvtf.Normalize((0.4914, 0.4822, 0.4465), (0.247, 0.243, 0.261))
             ])
