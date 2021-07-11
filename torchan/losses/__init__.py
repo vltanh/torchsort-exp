@@ -1,4 +1,3 @@
-from .classification.crossentropy import *
-from .classification.focalloss import *
-from .segmentation.diceloss import *
+from .classification import *
+from .segmentation import *
 from .mixedloss import *

@@ -1,0 +1,57 @@
+id: CrossEntropy
+pretrained: null
+seed: 3698
+model:
+    name: BaseClassifier
+    args:
+        extractor_cfg: 
+            name: ResNetExtractor
+            args:
+                version: resnet18
+        nclasses: 10
+optimizer:
+    name: Adam
+    args:
+loss:
+    name: CrossEntropyLoss
+    args:
+metric:
+    - name: Accuracy
+      args:
+    - name: TopK
+      args:
+        k: 3
+        nclasses: 10
+scheduler:
+    name: ReduceLROnPlateau
+    args:
+        mode: min
+        factor: 0.5
+        patience: 10000
+        verbose: True
+dataset:
+    train:
+        name: CIFARDataset
+        args:
+            is_train: True
+        loader:
+            name: DataLoader
+            args:
+                batch_size: 64
+                shuffle: True
+                pin_memory: True
+    val:
+        name: CIFARDataset
+        args:
+            is_train: False
+        loader:
+            name: DataLoader
+            args:
+                batch_size: 64
+                shuffle: False
+                pin_memory: True
+trainer:
+    nepochs: 500
+    val_step: 1
+    log_step: 1
+    log_dir: runs
