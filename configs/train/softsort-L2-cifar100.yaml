@@ -1,34 +1,35 @@
-id: CrossEntropy-ResNet18-Augmented
+id: SoftSort-L2-CIFAR100-NonAugmented-1
 pretrained: null
 seed: 3698
 model:
-    name: BaseClassifier
-    args:
-        extractor_cfg: 
-            name: ResNetExtractor
-            args:
-                version: resnet18
-        nclasses: 10
-    # name: CNN
+    # name: BaseClassifier
     # args:
-    #     hidden: 64
+    #     extractor_cfg: 
+    #         name: ResNetExtractor
+    #         args:
+    #             version: resnet18
     #     nclasses: 10
+    name: CNN
+    args:
+        hidden: 64
+        nclasses: 100
 optimizer:
-    name: SGD
+    name: Adam
     args:
-        lr: 0.1
-        momentum: 0.9
-        weight_decay: 0.0005
+        lr: 0.0001
 loss:
-    name: CrossEntropyLoss
+    name: TopKClassificationLoss
     args:
+        nclasses: 100
+        regularization: l2
+        regularization_strength: 1.0
 metric:
     - name: Accuracy
       args:
     - name: TopK
       args:
         k: 3
-        nclasses: 10
+        nclasses: 100
 scheduler:
     name: ReduceLROnPlateau
     args:
@@ -40,9 +41,9 @@ dataset:
     train:
         name: CIFARDataset
         args:
+            version: cifar100
             is_train: True
-            augmented: True
-            imagenet_normalize: True
+            augmented: False
         loader:
             name: DataLoader
             args:
@@ -52,8 +53,8 @@ dataset:
     val:
         name: CIFARDataset
         args:
+            version: cifar100
             is_train: False
-            imagenet_normalize: True
         loader:
             name: DataLoader
             args:

@@ -1,27 +1,28 @@
-id: CrossEntropy-ResNet18-Augmented
+id: SoftSort-L2-NonAugmented-10
 pretrained: null
 seed: 3698
 model:
-    name: BaseClassifier
-    args:
-        extractor_cfg: 
-            name: ResNetExtractor
-            args:
-                version: resnet18
-        nclasses: 10
-    # name: CNN
+    # name: BaseClassifier
     # args:
-    #     hidden: 64
+    #     extractor_cfg: 
+    #         name: ResNetExtractor
+    #         args:
+    #             version: resnet18
     #     nclasses: 10
+    name: CNN
+    args:
+        hidden: 64
+        nclasses: 10
 optimizer:
-    name: SGD
+    name: Adam
     args:
-        lr: 0.1
-        momentum: 0.9
-        weight_decay: 0.0005
+        lr: 0.0001
 loss:
-    name: CrossEntropyLoss
+    name: TopKClassificationLoss
     args:
+        nclasses: 10
+        regularization: l2
+        regularization_strength: 10.0
 metric:
     - name: Accuracy
       args:
@@ -41,8 +42,7 @@ dataset:
         name: CIFARDataset
         args:
             is_train: True
-            augmented: True
-            imagenet_normalize: True
+            augmented: False
         loader:
             name: DataLoader
             args:
@@ -53,7 +53,6 @@ dataset:
         name: CIFARDataset
         args:
             is_train: False
-            imagenet_normalize: True
         loader:
             name: DataLoader
             args:

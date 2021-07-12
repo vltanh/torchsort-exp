@@ -1,18 +1,18 @@
-id: SoftSort-KL
+id: SoftSort-KL-ResNet18-Augmented-1
 pretrained: null
 seed: 3698
 model:
-    # name: BaseClassifier
-    # args:
-    #     extractor_cfg: 
-    #         name: ResNetExtractor
-    #         args:
-    #             version: resnet18
-    #     nclasses: 10
-    name: CNN
+    name: BaseClassifier
     args:
-        hidden: 64
+        extractor_cfg: 
+            name: ResNetExtractor
+            args:
+                version: resnet18
         nclasses: 10
+    # name: CNN
+    # args:
+    #     hidden: 64
+    #     nclasses: 10
 optimizer:
     name: Adam
     args:
@@ -42,6 +42,8 @@ dataset:
         name: CIFARDataset
         args:
             is_train: True
+            augmented: True
+            imagenet_normalize: True
         loader:
             name: DataLoader
             args:
@@ -52,6 +54,7 @@ dataset:
         name: CIFARDataset
         args:
             is_train: False
+            imagenet_normalize: True
         loader:
             name: DataLoader
             args:
