@@ -13,20 +13,26 @@ def CIFAR(version):
 
 
 class CIFARDataset:
-    def __init__(self, version='cifar10', data_dir='data', is_train=True):
+    def __init__(self, version='cifar10', data_dir='data', is_train=True, augmented=True, imagenet_normalize=False):
         self.data = CIFAR(version)(data_dir, train=is_train, download=True)
         if is_train:
-            self.transform = tvtf.Compose([
-                tvtf.RandomCrop(32, padding=4, padding_mode="reflect"),
-                tvtf.RandomHorizontalFlip(),
-                tvtf.ToTensor(),
-                tvtf.Normalize((0.4914, 0.4822, 0.4465), (0.247, 0.243, 0.261))
-            ])
+            tfs = []
+            if augmented:
+                tfs += [
+                    tvtf.RandomCrop(32, padding=4, padding_mode="reflect"),
+                    tvtf.RandomHorizontalFlip(),
+                ]
+            tfs += [tvtf.ToTensor()]
+            if imagenet_normalize:
+                tfs += [tvtf.Normalize((0.4914, 0.4822, 0.4465),
+                                       (0.247, 0.243, 0.261))]
+            self.transform = tvtf.Compose(tfs)
         else:
-            self.transform = tvtf.Compose([
-                tvtf.ToTensor(),
-                tvtf.Normalize((0.4914, 0.4822, 0.4465), (0.247, 0.243, 0.261))
-            ])
+            tfs = [tvtf.ToTensor()]
+            if imagenet_normalize:
+                tfs += [tvtf.Normalize((0.4914, 0.4822, 0.4465),
+                                       (0.247, 0.243, 0.261))]
+            self.transform = tvtf.Compose(tfs)
 
     def __getitem__(self, i):
         img, lbl = self.data[i]
